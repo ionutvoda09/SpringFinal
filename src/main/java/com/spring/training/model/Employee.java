@@ -1,9 +1,9 @@
-package com.howtodoinjava.demo.model;
+package com.spring.training.model;
 
 public class Employee {
 
 	public Employee() {
-		
+
 	}
 	public Employee(Integer id, String firstName, String lastName, String email) {
 		super();
@@ -12,12 +12,12 @@ public class Employee {
 		this.lastName = lastName;
 		this.email = email;
 	}
-	
+
 	private Integer id;
 	private String firstName;
 	private String lastName;
 	private String email;
-	
+
 	public Integer getId() {
 		return id;
 	}
