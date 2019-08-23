@@ -14,5 +14,9 @@ public interface EmployeeService {
 
     EmployeeDetailDto save(EmployeeDetailDto employee);
 
+    Optional<EmployeeDetailDto> update(EmployeeDetailDto employee);
+
     Optional<EmployeeDetailDto> delete(Integer id);
+
+    Optional<EmployeeDetailDto> findById(Integer id);
 }

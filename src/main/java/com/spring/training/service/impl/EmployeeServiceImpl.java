@@ -8,6 +8,8 @@ import com.spring.training.service.EmployeeService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public EmployeeDetailDto save(EmployeeDetailDto employee) {
         //Much beautiful way:
         //return modelMapper.map(repository.save(modelMapper.map(employee, Employee.class)), EmployeeDetailDto.class);
@@ -41,6 +44,26 @@ public class EmployeeServiceImpl implements EmployeeService {
         return response;
     }
 
+    /**NOT FINISHED -> ADD ALL FIELDS AND FIX NULL POINTERS !!!*/
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Optional<EmployeeDetailDto> update(EmployeeDetailDto employee) {
+        Optional<Employee> existingEmployee = repository.findById(employee.getId());
+
+        if(!existingEmployee.isPresent()){
+            return Optional.empty();
+        }else {
+            if(!existingEmployee.get().getFirstName().equalsIgnoreCase(employee.getFirstName()))
+                existingEmployee.get().setFirstName(employee.getFirstName());
+            if(!existingEmployee.get().getLastName().equalsIgnoreCase(employee.getLastName()))
+                existingEmployee.get().setLastName(employee.getLastName());
+            if(!existingEmployee.get().getPhone().equalsIgnoreCase(employee.getPhone()))
+                existingEmployee.get().setPhone(employee.getPhone());
+        }
+
+        return Optional.of(modelMapper.map(existingEmployee.get(), EmployeeDetailDto.class));
+    }
+
     @Override
     public Optional<EmployeeDetailDto> delete(Integer id) {
         Optional<Employee> employeeToDelete = repository.findById(id);
@@ -49,6 +72,11 @@ public class EmployeeServiceImpl implements EmployeeService {
             repository.delete(employeeToDelete.get());
             return Optional.of(modelMapper.map(employeeToDelete.get(), EmployeeDetailDto.class));
         } else return Optional.empty();
+    }
+
+    @Override
+    public Optional<EmployeeDetailDto> findById(Integer id) {
+        return Optional.ofNullable(modelMapper.map(repository.findById(id), EmployeeDetailDto.class));
     }
 
     //This method convert a list of Employee Entity to a list of EmployeeSummary

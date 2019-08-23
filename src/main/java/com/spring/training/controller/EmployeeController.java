@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.spring.training.dto.EmployeeDetailDto;
 import com.spring.training.dto.EmployeeSummaryDto;
+import com.spring.training.model.Employee;
 import com.spring.training.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,13 @@ public class EmployeeController {
             return new ResponseEntity<>(removedEmployee, HttpStatus.OK);
         }
         return new ResponseEntity("id not found", HttpStatus.NOT_FOUND);
+    }
+
+    @PutMapping("/edit")
+    public ResponseEntity<Optional<EmployeeDetailDto>> update(@Valid @RequestBody EmployeeDetailDto employee) {
+        Optional<EmployeeDetailDto> updatedEmployee = service.update(employee);
+        return updatedEmployee.isPresent() ?
+                new ResponseEntity(updatedEmployee, HttpStatus.OK) : new ResponseEntity("id not found", HttpStatus.NOT_FOUND);
     }
 
 }

@@ -1,13 +1,17 @@
 package com.spring.training.dto;
 
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class EmployeeDetailDto {
 
     private Integer id;
+    @NotNull
     private String firstName;
+    @NotNull
     private String lastName;
+    @NotNull
     private String email;
     private String address;
     private String phone;
