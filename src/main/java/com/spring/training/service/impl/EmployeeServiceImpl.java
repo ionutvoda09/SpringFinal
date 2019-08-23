@@ -42,20 +42,19 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeDetailDto delete(Integer id) {
+    public Optional<EmployeeDetailDto> delete(Integer id) {
         Optional<Employee> employeeToDelete = repository.findById(id);
+
         if (employeeToDelete.isPresent()) {
             repository.delete(employeeToDelete.get());
-            return modelMapper.map(employeeToDelete.get(), EmployeeDetailDto.class);
-        } else return null;
+            return Optional.of(modelMapper.map(employeeToDelete.get(), EmployeeDetailDto.class));
+        } else return Optional.empty();
     }
 
     //This method convert a list of Employee Entity to a list of EmployeeSummary
     private List<EmployeeSummaryDto> entitiesToDtos(List<Employee> input) {
         List<EmployeeSummaryDto> output = new ArrayList<>();
-        input.forEach(employee -> {
-            output.add(modelMapper.map(employee, EmployeeSummaryDto.class));
-        });
+        input.forEach(employee -> output.add(modelMapper.map(employee, EmployeeSummaryDto.class)));
         return output;
     }
 }

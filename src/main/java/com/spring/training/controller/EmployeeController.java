@@ -7,8 +7,10 @@ import com.spring.training.dto.EmployeeDetailDto;
 import com.spring.training.dto.EmployeeSummaryDto;
 import com.spring.training.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -31,11 +33,19 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity delete(@PathVariable @NotNull Integer id){
-        if(service.delete(id) != null)
-            return ResponseEntity.ok(service.delete(id));
-        else
-            return ResponseEntity.of(Optional.of(service.delete(id)));
+    public ResponseEntity<Optional<EmployeeDetailDto>> delete(@PathVariable @NotNull Integer id) {
+
+        Optional<EmployeeDetailDto> removedEmployee = service.delete(id);
+
+        /**Lambda solution -> Much better*/
+        /*return removedEmployee.isPresent() ?
+                new ResponseEntity<>(removedEmployee, HttpStatus.OK) : new ResponseEntity("id not found", HttpStatus.NOT_FOUND);*/
+
+        /**Classic way -> replace with lambda*/
+        if (removedEmployee.isPresent()) {
+            return new ResponseEntity<>(removedEmployee, HttpStatus.OK);
+        }
+        return new ResponseEntity("id not found", HttpStatus.NOT_FOUND);
     }
 
 }
