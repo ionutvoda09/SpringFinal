@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.spring.training.dto.EmployeeDetailDto;
+import com.spring.training.dto.EmployeeSaveDto;
 import com.spring.training.dto.EmployeeSummaryDto;
 import com.spring.training.model.Employee;
 import com.spring.training.service.EmployeeService;
@@ -49,8 +50,15 @@ public class EmployeeController {
         return new ResponseEntity("id not found", HttpStatus.NOT_FOUND);
     }
 
+    @PatchMapping("/edit")
+    public ResponseEntity<Optional<EmployeeDetailDto>> update(@Valid @RequestBody EmployeeSaveDto employee) {
+        Optional<EmployeeDetailDto> updatedEmployee = service.update(employee);
+        return updatedEmployee.isPresent() ?
+                new ResponseEntity(updatedEmployee, HttpStatus.OK) : new ResponseEntity("id not found", HttpStatus.NOT_FOUND);
+    }
+
     @PutMapping("/edit")
-    public ResponseEntity<Optional<EmployeeDetailDto>> update(@Valid @RequestBody EmployeeDetailDto employee) {
+    public ResponseEntity<Optional<EmployeeDetailDto>> updatePut(@Valid @RequestBody EmployeeSaveDto employee) {
         Optional<EmployeeDetailDto> updatedEmployee = service.update(employee);
         return updatedEmployee.isPresent() ?
                 new ResponseEntity(updatedEmployee, HttpStatus.OK) : new ResponseEntity("id not found", HttpStatus.NOT_FOUND);
