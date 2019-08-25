@@ -1,6 +1,7 @@
 package com.spring.training.service.impl;
 
 import com.spring.training.dto.EmployeeDetailDto;
+import com.spring.training.dto.EmployeeSaveDto;
 import com.spring.training.dto.EmployeeSummaryDto;
 import com.spring.training.model.Employee;
 import com.spring.training.repository.EmployeeRepository;
@@ -26,7 +27,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<EmployeeSummaryDto> getEmployees() {
-        return entitiesToDtos(repository.findAll());
+        return entitiesToDtos((List<Employee>) repository.findAll());
     }
 
     @Override
@@ -47,18 +48,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     /**NOT FINISHED -> ADD ALL FIELDS AND FIX NULL POINTERS !!!*/
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public Optional<EmployeeDetailDto> update(EmployeeDetailDto employee) {
-        Optional<Employee> existingEmployee = repository.findById(employee.getId());
+    public Optional<EmployeeDetailDto> update(EmployeeSaveDto toUpdateEmployee) {
+        Optional<Employee> existingEmployee = repository.findById(toUpdateEmployee.getId());
 
         if(!existingEmployee.isPresent()){
             return Optional.empty();
         }else {
-            if(!existingEmployee.get().getFirstName().equalsIgnoreCase(employee.getFirstName()))
-                existingEmployee.get().setFirstName(employee.getFirstName());
-            if(!existingEmployee.get().getLastName().equalsIgnoreCase(employee.getLastName()))
-                existingEmployee.get().setLastName(employee.getLastName());
-            if(!existingEmployee.get().getPhone().equalsIgnoreCase(employee.getPhone()))
-                existingEmployee.get().setPhone(employee.getPhone());
+            if(toUpdateEmployee.getAddress().isPresent())
+                existingEmployee.get().setAddress(toUpdateEmployee.getAddress().get());
+            if(toUpdateEmployee.getEmail().isPresent())
+                existingEmployee.get().setEmail(toUpdateEmployee.getEmail().get());
+            /* CONTINUE with all fields!!! */
         }
 
         return Optional.of(modelMapper.map(existingEmployee.get(), EmployeeDetailDto.class));

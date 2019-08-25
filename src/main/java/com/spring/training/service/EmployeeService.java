@@ -1,6 +1,7 @@
 package com.spring.training.service;
 
 import com.spring.training.dto.EmployeeDetailDto;
+import com.spring.training.dto.EmployeeSaveDto;
 import com.spring.training.dto.EmployeeSummaryDto;
 import com.spring.training.model.Employee;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public interface EmployeeService {
 
     EmployeeDetailDto save(EmployeeDetailDto employee);
 
-    Optional<EmployeeDetailDto> update(EmployeeDetailDto employee);
+    Optional<EmployeeDetailDto> update(EmployeeSaveDto employee);
 
     Optional<EmployeeDetailDto> delete(Integer id);
 
